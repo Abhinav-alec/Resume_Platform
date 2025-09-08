@@ -9,18 +9,36 @@ export default function ResumeView() {
   const [loading, setLoading] = useState(true);
   const [pdfLoading, setPdfLoading] = useState(false);
 
+  // ✅ Date formatters
+  const formatDateTime = (date) => {
+    if (!date) return "N/A";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "N/A";
+    return new Intl.DateTimeFormat("en-US", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(d);
+  };
+
+  const formatDateOnly = (date) => {
+    if (!date) return "N/A";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "N/A";
+    return new Intl.DateTimeFormat("en-US", {
+      dateStyle: "medium",
+    }).format(d);
+  };
+
   useEffect(() => {
     const fetchResume = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const res = await axios.get(
           `http://localhost:5000/api/resumes/${resumeId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
         setResume(res.data || null);
       } catch (err) {
         console.error("Failed to fetch resume:", err);
@@ -115,11 +133,9 @@ export default function ResumeView() {
         renderText("Experience", "bold", 12, 20, [30, 30, 30]);
         resume.experience.forEach((exp) => {
           addPageIfNeeded(8);
-          // Job title left
           renderText(`${exp.role} @ ${exp.company}`, "bold", 11, 20, [0, 0, 0]);
-          // Date right
-          const dateText = `${exp.startDate?.substring(0, 10) || ""} - ${
-            exp.endDate?.substring(0, 10) || "Present"
+          const dateText = `${formatDateOnly(exp.startDate)} - ${
+            exp.endDate ? formatDateOnly(exp.endDate) : "Present"
           }`;
           renderText(
             dateText,
@@ -130,7 +146,6 @@ export default function ResumeView() {
             "right"
           );
 
-          // Description as bullets
           const descriptionLines = doc.splitTextToSize(
             exp.description || "",
             contentWidth - 8
@@ -179,6 +194,19 @@ export default function ResumeView() {
           }
         });
       }
+
+      // --- Created / Updated Dates ---
+      y += 6;
+      renderText(
+        `Created At: ${formatDateTime(resume.createdAt)}`,
+        "italic",
+        9
+      );
+      renderText(
+        `Updated At: ${formatDateOnly(resume.updatedAt)}`,
+        "italic",
+        9
+      );
 
       doc.save(`${resume.title || "resume"}.pdf`);
     } catch (err) {
@@ -248,8 +276,8 @@ export default function ResumeView() {
                 {exp.role} @ {exp.company}
               </p>
               <p className="text-sm text-gray-600">
-                {exp.startDate?.substring(0, 10)} -{" "}
-                {exp.endDate?.substring(0, 10) || "Present"}
+                {formatDateOnly(exp.startDate)} -{" "}
+                {exp.endDate ? formatDateOnly(exp.endDate) : "Present"}
               </p>
               <p>{exp.description}</p>
             </div>
@@ -286,6 +314,12 @@ export default function ResumeView() {
               )}
             </div>
           ))}
+        </div>
+
+        {/* Created/Updated Info */}
+        <div className="mt-4 text-sm text-gray-500">
+          <p>Created At: {formatDateTime(resume.createdAt)}</p>
+          <p>Updated At: {formatDateOnly(resume.updatedAt)}</p>
         </div>
       </div>
 

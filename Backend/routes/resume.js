@@ -39,8 +39,16 @@ router.get("/:resumeId", auth, async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    user.resumes.push(req.body);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const resumeData = req.body;
+
+    // Add first version snapshot
+    resumeData.versions = [{ createdAt: new Date(), data: { ...resumeData } }];
+
+    user.resumes.push(resumeData);
     await user.save();
+
     res.json(user.resumes);
   } catch (err) {
     console.error("Add resume error:", err);
@@ -52,10 +60,20 @@ router.post("/", auth, async (req, res) => {
 router.put("/:resumeId", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
     const resume = user.resumes.id(req.params.resumeId);
     if (!resume) return res.status(404).json({ message: "Resume not found" });
 
+    // Add new version before updating
+    resume.versions.push({
+      createdAt: new Date(),
+      data: { ...req.body },
+    });
+
+    // Update resume fields
     Object.assign(resume, req.body);
+
     await user.save();
     res.json(resume);
   } catch (err) {
