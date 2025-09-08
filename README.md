@@ -16,16 +16,20 @@ A full-stack web application where users can create, edit, manage, and download 
 ## 🖼️ Screenshots  
 
 ### 🔑 Signup Page  
-![Signup Page](./screenshots/signup.png)  
+<img width="1920" height="1080" alt="Screenshot (61)" src="https://github.com/user-attachments/assets/4bc3a092-ba41-434b-a91f-8e608075883a" />
+  
 
 ### 📂 Dashboard  
-![Dashboard](./screenshots/dashboard.png)  
+<img width="1920" height="1080" alt="Screenshot (62)" src="https://github.com/user-attachments/assets/cfefb082-661c-4f6f-927c-293aea0c9bcf" />
+ 
 
 ### 📝 Resume View  
-![Resume View](./screenshots/resume-view.png)  
+<img width="1920" height="1080" alt="Screenshot (63)" src="https://github.com/user-attachments/assets/e564f080-c6c3-47d1-97a7-52638469072a" />
+
 
 ### 📄 PDF Download  
-![PDF Download](./screenshots/pdf.png)  
+<img width="1920" height="1080" alt="Screenshot (64)" src="https://github.com/user-attachments/assets/b4f169b8-2de8-4d38-87e7-fe4e69e41f6c" />
+  
 
 ---
 
