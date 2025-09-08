@@ -15,7 +15,8 @@ export default function ResumeBuilder() {
       { company: "", role: "", startDate: "", endDate: "", description: "" },
     ],
     skills: [""],
-    projects: [{ title: "", description: "", link: "" }], // added projects
+    projects: [{ title: "", description: "", link: "" }],
+    versions: [], // Add versions array
   });
 
   // Fetch resume if editing
@@ -64,7 +65,8 @@ export default function ResumeBuilder() {
               projects:
                 existing.projects?.length > 0
                   ? existing.projects
-                  : [{ title: "", description: "", link: "" }], // added projects
+                  : [{ title: "", description: "", link: "" }],
+              versions: existing.versions || [], // Load existing versions
             });
           }
         } catch (err) {
@@ -102,20 +104,45 @@ export default function ResumeBuilder() {
     setResume({ ...resume, [field]: [...resume[field], template] });
   };
 
+  // Submit handler with versioning
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     try {
       if (id) {
-        await axios.put(`http://localhost:5000/api/resumes/${id}`, resume, {
+        // Fetch the existing resume to save a version
+        const res = await axios.get(`http://localhost:5000/api/resumes/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        const existingResume = res.data;
+
+        // Prepare a version object
+        const version = {
+          createdAt: new Date(),
+          data: {
+            title: existingResume.title,
+            personalDetails: existingResume.personalDetails,
+            education: existingResume.education,
+            experience: existingResume.experience,
+            skills: existingResume.skills,
+            projects: existingResume.projects,
+          },
+        };
+
+        // Update resume with new version
+        await axios.put(
+          `http://localhost:5000/api/resumes/${id}`,
+          { ...resume, versions: [...(resume.versions || []), version] },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       } else {
+        // New resume creation
         await axios.post("http://localhost:5000/api/resumes", resume, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
+
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
