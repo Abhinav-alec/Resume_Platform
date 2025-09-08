@@ -22,6 +22,8 @@ A full-stack web application where users can create, edit, manage, and download 
 ### 📂 Dashboard  
 <img width="1920" height="1080" alt="Screenshot (62)" src="https://github.com/user-attachments/assets/cfefb082-661c-4f6f-927c-293aea0c9bcf" />
  
+### 📝 Resume builder
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/746e7b53-ab7e-47cc-9385-a4b1f79d9a1e" />
 
 ### 📝 Resume View  
 <img width="1920" height="1080" alt="Screenshot (63)" src="https://github.com/user-attachments/assets/e564f080-c6c3-47d1-97a7-52638469072a" />
